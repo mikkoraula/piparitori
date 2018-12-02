@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Automatic{% endblock %}
+{% block content %}
+<!--    <h1>View Statistics</h1>-->
+    <!--<span id="ajaxResult">?</span>-->
+
+      <div class="floating-background">
+        Näistä arvoista voit yrittää ymmärtää, miten nopeuden muutos määritellään.
+      </div>
+
+
+      <div id="tables-parent">
+        <!-- general information -->
+        <table class="table">
+          <tr>
+            <th>
+              Nopeus
+            </th>
+            <th>
+              Aika (s)
+            </th>
+            <th>
+              Muutosmäärä
+            </th>
+          </tr>
+            <td id="td-speed" class="td-static"></td>
+            <td id="td-rotations" class="td-static"></td>
+            <td id="td-intensity" class="td-static"></td>
+          </tr>
+        </table>
+
+        <!-- Lives -->
+        <table class="table">
+          <tr>
+            <th>
+              Elämät
+            </th>
+            <th>
+              Kuolema
+            </th>
+            <th>
+              Max elämien muutos
+            </th>
+          </tr>
+          <tr>
+            <td id="td-lives" class="td-neutral">
+              <span id="td-value-lives"></span> / <span id="td-value-maxLives"></span>
+            </td>
+            <td id="td-deathRNG" class="td-positive">
+              <span id="td-value-deathRNG"></span>% / <span id="td-value-deathProbability"></span>%
+            </td>
+            <td id="td-maxLivesRNG" class="td-negative">
+              <span id="td-value-maxLivesRNG"></span>% / <span id="td-value-maxLivesProbability"></span>%
+            </td>
+          </tr>
+        </table>
+        
+        <!-- Speed -->
+        <table class="table">
+          <tr>
+            <th>
+              Nopeuden muutossuunta
+            </th>
+            <th>
+              Muutossuunnan muutos
+            </th>
+          </tr>
+          <tr>
+            <td id="td-speedChange" class="td-negative"></td>
+            <td id="td-speedChangeRNG" class="td-negative">
+              <span id="td-value-speedChangeRNG"></span>% / <span id="td-value-speedChangeProbability"></span>%
+            </td>
+          </tr>
+        </table>
+
+      </div>
+
+
+    <!--<table id="statsTable"></table>-->
+
+
+{% endblock %}
+{% block scripts %}
+    <script type=text/javascript>
+        initStatisticsRefresh()
+    </script>
+{% endblock %}

@@ -1,0 +1,20 @@
+{
+  "name": "windmill",
+  "version": "0.0.0",
+  "description": "webpage for gingers bred",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mikko",
+  "license": "ISC",
+  "dependencies": {
+    "connect": "^3.6.5",
+    "express": "^4.16.2",
+    "formidable": "^1.1.1",
+    "body-parser": "^1.17.1",
+    "cookie-parser": "^1.4.3",
+    "ejs": "2.5.6",
+    "request": "^2.81.0"
+  }
+}

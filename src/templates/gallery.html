@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Gallery{% endblock %}
+
+{% block content %}
+
+<div id="carouselFullScreen" class="carousel slide" data-interval="false">
+  <ol class="carousel-indicators">
+    {% for image in images %}
+      {% if loop.index0 == 0 %}
+        <li data-target="#carouselFullScreen" data-slide-to="0" class="active"></li>
+      {% else %}
+        <li data-target="#carouselFullScreen" data-slide-to={{loop.index0}}></li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+  <div class="carousel-inner images-carousel" role="listbox">
+    {% for image in images %}
+      {% if loop.index == 1 %}
+        <div class="carousel-item active">
+      {% else %}
+        <div class="carousel-item">
+      {% endif %}
+
+      {% if '.jpg' in image or '.JPG' in image %}
+        <img class="d-block img-fluid img-fullscreen" src={{image}} alt={{image}}>
+      {% else %}
+        <video class="d-block img-fluid img-fullscreen" onclick="playVideo(this);" src={{image}} alt={{image}}></video>
+        <div class="carousel-video-play-background"> 
+          <div class="carousel-video-play-button">
+            <span class="octicon octicon-chevron-right" style="font-size: 10vh;"></span>
+          </div>
+        </div>
+      {% endif %}      
+        <!--<img class="d-block img-fluid img-fullscreen" src={{image}} alt={{image}}>-->
+        <div class="carousel-caption d-md-block" style="background-color: black; opacity: 0.75;">
+          <p>{{captions[loop.index - 1]}}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <a class="carousel-control-prev" href="#carouselFullScreen" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+
+  <a class="carousel-control-next" href="#carouselFullScreen" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+
+  <div class="carousel-exit-fullscreen">
+    <button onclick="window.location.href='/gallerymenu';" class="carousel-exit-button">
+      <span class="octicon octicon-x" style="font-size:4vh";></span>
+    </button>
+  </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+
+<script type=text/javascript>
+  function playVideo(el) {
+    if (el.paused) {
+      el.play();
+      $('.carousel-video-play-button').hide();
+    } else {
+      el.pause();
+      $('.carousel-video-play-button').show();
+    }
+  }
+</script>
+
+{% endblock scripts %}

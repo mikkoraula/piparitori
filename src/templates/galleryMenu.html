@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Gallery{% endblock %}
+{% block content %}
+
+  <div class="floating-background">
+    Katsele tällä sivulla kuvia miten tuulimylly syntyi, tai ihmettele viime vuosien aikaansaannoksia.
+  </div>
+
+
+  {% for image in images %}
+    {% if loop.index0 % 2 == 0 %}
+      <div class="row" style="margin-top: 2vh;">
+    {% endif %}
+
+      <div class="col-6">
+        <div class="card" onclick="redirect('/gallery/{{image.name}}')">
+          <img class="card-img-top" src={{image.src}} alt="Card image cap">
+          <div class="card-block">
+            <p class="card-text">{{image.caption}}</p>
+          </div>
+        </div>
+      </div>
+    {% if loop.index0 % 2 == 1 %}
+      </div>
+    {% endif %}
+  {% endfor %}
+
+{% endblock %}
+
+{% block scripts %}
+  <script type="text/javascript">
+    function redirect(location) {
+      window.location.href = location;
+    }
+  </script>
+{% endblock %}

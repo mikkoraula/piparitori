@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Custom Run{% endblock %}
+{% block content %}
+
+    <div class="floating-background">
+        <div class="customrun-text" id="customrun-title">Run the motor with custom speed</div>
+    </div>
+
+    <div class="floating-background">
+        <button onclick="changeSpeed(1)" id="customrun-positive" class="btn customrun-btn td-positive"><div>+</div></button>
+        <div id="customrun-speed">60</div>
+        <button onclick="changeSpeed(-1)" id="customrun-negative" class="btn customrun-btn td-negative"><div>-</div></button>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script type=text/javascript>
+	var currentSpeed = intensity;
+	var intensity = 5;
+	var pDisabled = false;
+	var nDisabled = false;
+
+	function lockButtons() {
+		$('#customrun-positive').addClass('disabled');
+		pDisabled = true;
+		$('#customrun-negative').addClass('disabled');
+		nDisabled = true;
+	}
+	function unlockButtons() {
+		console.log("unlocked buttons !!!!! yay");
+		if (currentSpeed != 100) {
+			$('#customrun-positive').removeClass('disabled');
+			pDisabled = false;
+		}
+		if (currentSpeed != intensity) {
+			$('#customrun-negative').removeClass('disabled');
+			nDisabled = false;
+		}
+	}
+
+	function changeSpeed(direction) {
+		if ((direction == 1 && pDisabled) || (direction == -1 && nDisabled))
+			return;
+		// lock buttons for one second to avoid spamming
+		lockButtons()
+		setTimeout(function() { unlockButtons(); }, 1000);
+
+		var newSpeed = currentSpeed + intensity * direction;
+		console.log("about to change to " + newSpeed);
+		$.ajax({
+	        type: 'GET',
+	        url: '/custom/change/' + JSON.stringify(newSpeed),
+	        dataType: 'json',                              
+	        contentType: 'application/json; charset=utf-8'
+	    })
+	    .done(function(result) {
+	    	console.log("done");
+	    	console.log(result);
+	    })
+	    .fail(function(xhr, status, error) {
+	        console.log(error);
+	    })
+	    .always(function(data){
+	    	console.log("alwayalways");
+	    });
+	}
+
+    function initAjaxLoop() {
+	    getSpeed();
+	    setInterval(getSpeed, 500);
+	}
+
+	function getSpeed() {
+	    $.ajax({
+	        type: 'GET',
+	        url: '/custom/getspeed/',
+	        dataType: 'json',                          
+	        contentType: 'application/json; charset=utf-8'
+	    })
+	    .done(function(result) {
+	    	console.log("found result " + result);
+	    	currentSpeed = parseInt(result);
+	    	$('#customrun-speed').text(result);
+	    	if (currentSpeed === 0)
+	    		window.location.href = '/';
+	    })
+	    .fail(function(xhr, status, error) {
+	        console.log(error);
+	    })
+	    .always(function(data){
+	    });
+	}
+
+	initAjaxLoop();
+</script>
+
+{% endblock scripts %}

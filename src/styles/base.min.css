@@ -1,0 +1,327 @@
+@import url(http://fonts.googleapis.com/css?family=PT+Sans:400,700);@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400italic,400,600,700,300);@import url(http://fonts.googleapis.com/css?family=PT+Mono);a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,caption,center,cite,code,dd,del,details,dfn,div,dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,html,i,iframe,img,ins,kbd,label,legend,li,mark,menu,nav,object,ol,output,p,pre,q,ruby,s,samp,section,small,span,strike,strong,sub,summary,sup,table,tbody,td,tfoot,th,thead,time,tr,tt,u,ul,var,video{margin:0;padding:0;border:0;font:inherit;vertical-align:baseline}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:after,blockquote:before,q:after,q:before{content:'';content:none}table{border-collapse:collapse;border-spacing:0}*{text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}html{font-size:62.5%}@media screen and (min-width:768px){html{font-size:75%}}body{font-family:"Source Sans Pro",Verdana,Geneva,sans-serif;color:#3c3c3d;font-size:1.5rem;line-height:1.44}h1,h2,h3{font-family:"PT Sans",Futura,"Trebuchet MS",Arial,sans-serif;letter-spacing:1px;font-weight:700}code,kbd,pre,samp{font-family:"PT Mono",monospace;background-color:#efeff0;border:1px solid #dededf;border-radius:2px;font-size:1.3rem}code,kbd,samp{padding:0 4px}pre{padding:8px}pre code,pre kbd,pre samp{background-color:transparent;border:none;border-radius:0;padding:0}h1,h2,h3,h4,h5,h6{padding:13px 0 21px;line-height:1.2}@media screen and (min-width:768px){h1,h2,h3,h4,h5,h6{padding-bottom:21px 0 34px}}h1:first-child,h2:first-child,h3:first-child,h4:first-child,h5:first-child,h6:first-child{padding-top:0}h1{font-size:3.4rem;font-weight:700}h2{font-size:2.8rem}h3{font-size:2.4rem}h4{font-size:2rem;font-weight:700}h5{font-size:2rem;font-weight:400}h6{font-size:2rem;font-style:italic}a:link{color:#216a9e;text-decoration:underline}a:visited{color:purple}a:focus,a:hover{color:#184f74}a:active{color:#2a89c8}img{max-width:100%}blockquote,hr,pre{margin-bottom:13px}@media screen and (min-width:768px){blockquote,hr,pre{margin-bottom:21px}}dd,dl,figcaption,figure,img,ol,p,ul{padding-bottom:13px}@media screen and (min-width:768px){dd,dl,figcaption,figure,img,ol,p,ul{padding-bottom:21px}}hr{border-top:1px solid #cdcdce;border-bottom:1px solid #efeff0;border-left:none;border-right:none}blockquote{margin-left:13px;border-left:3px solid #cdcdce;padding:8px 13px}@media screen and (min-width:768px){blockquote{margin-left:21px;border-left:5px solid #cdcdce;padding:13px 21px}}blockquote p:last-child{padding-bottom:0}ol,ul{margin-left:21px}@media screen and (min-width:768px){ol,ul{margin-left:34px}}ol{list-style-type:decimal}ul{list-style-type:disc}dt{font-style:italic}dd{text-indent:21px}@media screen and (min-width:768px){dd{text-indent:34px}}figure{display:table;margin:0 auto;padding-left:13px;padding-right:13px}@media screen and (min-width:768px){figure{padding-left:21px;padding-right:21px}}figure img{display:table;margin:0 auto}figcaption,small,sub,sup{font-size:1.3rem}caption,figcaption{text-align:center;font-style:italic}cite,em,i{font-style:italic}b,strong,var{font-weight:700}q:after,q:before{content:"'"}q>q{font-style:italic}abbr,dfn{border-bottom:1px dotted #7d7d7e;cursor:default}sub{vertical-align:sub}sup{vertical-align:super}table{margin:0 auto}table caption{margin-bottom:5px}table thead{background-color:#216a9e;color:#fff}table tbody{background-color:#efeff0}table tbody tr:nth-child(2n){background-color:#dededf}table td,table th{padding:5px 8px}@media screen and (min-width:768px){table td,table th{padding:8px 13px}}table tfoot{background-color:#cdcdce}table tfoot td{text-align:center}
+
+/* declare colors */
+:root {
+	--marginal-color: #4ABDAC;
+	--marginal-color-transparent: #85D2C7;
+	--base-color: #DFDCE3;
+	--white-color: #fbfdfd;
+	--extra-color1: #FC4A1A;
+	--extra-color2: #F7B733;
+	/*
+	--primary-color-opp: #F6E8EA;
+	--text-color: #493434;
+	--accent-color: #EF626C;
+	--accent-color-opp: #84DCCF;
+	*/
+}
+
+/*
+Force full width & height.
+
+If this block is removed, the layout height/length will be determined by
+the amount of content in the page. That might result in a page which has
+a footer only a few inches from the top of the viewport, or one which
+scrolls beyond the viewport.
+
+This forces the layout to always be full screen regardless of how much,
+or how little, content is in place. Neither is "right" or "wrong", there
+are valid cases for each. I just want to be clear what's controlling the
+page/viewport height.
+*/
+html, body, .viewport {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	background-color: var(--white-color);
+	color: var(--white-color);
+}
+
+/* encapsulate the various syntax in helper clases */
+/* inspired by http://infrequently.org/2009/08/css-3-progress/ */
+
+/* items flex/expand vertically */
+.vbox {
+	/* previous syntax */
+	display: -webkit-box;
+	display:    -moz-box;
+	display:         box;
+
+	-webkit-box-orient: vertical;
+	   -moz-box-orient: vertical;
+	    -ms-box-orient: vertical;
+	        box-orient: vertical;
+
+	/* current syntax */
+	display: -webkit-flex;
+	display:    -moz-flex;
+	display:     -ms-flex;
+	display:         flex;
+
+	-webkit-flex-direction: column;
+	   -moz-flex-direction: column;
+	    -ms-flex-direction: column;
+	        flex-direction: column;
+}
+
+/* items flex/expand horizontally */
+.hbox {
+	/* previous syntax */
+	display: -webkit-box;
+	display:    -moz-box;
+	display:     -ms-box;
+	display:         box;
+
+	-webkit-box-orient: horizontal;
+	   -moz-box-orient: horizontal;
+	    -ms-box-orient: horizontal;
+	        box-orient: horizontal;
+
+	/* current syntax */
+	display: -webkit-flex;
+	display:    -moz-flex;
+	display:     -ms-flex;
+	display:         flex;
+
+	-webkit-flex-direction: row;
+	   -moz-flex-direction: row;
+	    -ms-flex-direction: row;
+	        flex-direction: row;
+}
+
+.space-between {
+	/* previous syntax */
+	-webkit-box-pack: justify;
+	   -moz-box-pack: justify;
+	    -ms-box-pack: justify;
+	        box-pack: justify;
+
+	/* current syntax */
+	-webkit-justify-content: space-between;
+	   -moz-justify-content: space-between;
+	    -ms-justify-content: space-between;
+	        justify-content: space-between;
+}
+
+/* I went with a fixed height header & footer because it's a common case.
+This could easily be altered to flex proportionally with the page.
+*/
+header, footer {
+	height: 75px;
+	width: 100%;
+	background-color: var(--marginal-color);
+	align-items: center;
+	display: flex;
+}
+
+footer > * {
+	margin: auto;
+}
+header > * {
+	margin: auto;
+}
+
+.main {
+	/* previous syntax */
+	-webkit-box-flex: 1;
+	   -moz-box-flex: 1;
+	    -ms-box-flex: 1;
+	        box-flex: 1;
+
+	/* current syntax */
+	-webkit-flex: 1;
+	   -moz-flex: 1;
+	    -ms-flex: 1;
+	        flex: 1;
+}
+
+article {
+	/* previous syntax */
+	-webkit-box-flex: 7;
+	   -moz-box-flex: 7;
+	    -ms-box-flex: 7;
+	        box-flex: 7;
+
+	/* current syntax */
+	-webkit-flex: 7;
+	   -moz-flex: 7;
+	    -ms-flex: 7;
+	        flex: 7;
+
+	/*background-color: var(--marginal-color-transparent);*/
+    
+	padding: 20px;
+
+}
+
+nav {
+	/* previous syntax */
+	-webkit-box-flex: 1;
+	   -moz-box-flex: 1;
+	    -ms-box-flex: 1;
+	        box-flex: 1;
+
+	/* current syntax */
+	-webkit-flex: 1;
+	   -moz-flex: 1;
+	    -ms-flex: 1;
+	        flex: 1;
+
+	margin-bottom: 6px;
+	justify-content: space-between;
+}
+
+/*
+nav > * {
+	/* previous syntax 
+	-webkit-box-flex: 1;
+	   -moz-box-flex: 1;
+	    -ms-box-flex: 1;
+	        box-flex: 1;
+
+	/* current syntax 
+	-webkit-flex: 1;
+	   -moz-flex: 1;
+	    -ms-flex: 1;
+	        flex: 1;
+
+
+	
+	margin-right: 6px;
+	margin-top: 6px;
+}
+*/
+
+/* remove the ugly default style of buttons */
+button, .inputButton {
+	padding: 0;
+	border: none;
+	background: none;
+	color: var(--text-color);
+}
+
+.sidebarButton {
+	padding: 10px;
+	margin-right: 6px;
+	margin-top: 6px;
+	font-size: 200%;
+	flex: 1;
+	overflow: hidden;
+}
+
+.buttonText {
+	margin-top: 0.5em;
+	padding: 0;
+}
+.buttonArrow {
+	font-size: 200%;
+	margin-left: -5em;
+}
+.sidebarButton > p {
+	transition: 0.4s;
+}
+.sidebarButton:hover p.buttonArrow {
+	margin-left: 0em;
+	visibility: visible;
+}
+.sidebarButton:active p {
+	color: black;
+}
+.sidebarButton:nth-child(3n+0) {
+	background-color: var(--marginal-color);
+}
+.sidebarButton:nth-child(3n+1) {
+	background-color: var(--extra-color1);
+}
+.sidebarButton:nth-child(3n+2) {
+	background-color: var(--extra-color2);
+}
+
+
+
+
+.marginals {
+	text-align: center;
+}
+
+/* The alert message box */
+.alert {
+    padding: 20px;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.alert.error {
+	background-color: #f44336; /* Red */
+}
+.alert.info {
+	background-color: #4CAF50; /* Green */
+}
+
+/* The close button */
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+    color: black;
+}
+
+.inputButton {
+	background-color: var(--extra-color2);
+	min-width: 100px;
+	min-height: 50px;
+	font-size: 130%;
+	margin: 10px;
+}
+form {
+	font-size: 130%;
+}
+input {
+	padding: 0;
+	border: none;
+	/*min-height: 40px;*/
+	font-size: 110%;
+}
+
+table tbody {
+    background-color: var(--extra-color1);
+}
+table tbody tr:nth-child(2n) {
+    background-color: var(--extra-color2);
+}
+table {
+    margin: 50px;
+    border: 4px solid white;
+}
+th {
+    background-color: var(--marginal-color);
+    border-bottom: 2px solid white;
+}
+td {
+    /*background-color: var(--extra-color2);*/
+}
+.td-static {
+    background-color: var(--marginal-color-transparent);
+}
+.td-neutral {
+    background-color: var(--extra-color2);
+}
+.td-positive {
+    background-color: limegreen;
+}
+.td-negative {
+    background-color: crimson;
+}
+#tables-parent {
+    display: none;
+    flex-direction: row;
+}
