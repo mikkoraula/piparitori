@@ -63,8 +63,11 @@ class SpotifyPlayer {
               }
             })
             .catch(e => {
-              console.log('Logging user out due to error', e);
-              this.logout();
+              //this.logout();
+              console.log("Player JSON was weird, probably inactive Spotify", e);
+              console.log("ASD");
+              clearInterval(this.loopInterval);
+
             });
         }
       };
@@ -92,7 +95,7 @@ class SpotifyPlayer {
         return `${this.exchangeHost}/login?scope=${encodeURIComponent(scopes.join(' '))}`;
       };
 
-      const url = getLoginURL(['user-read-playback-state']);
+      const url = getLoginURL(['user-read-playback-state', 'user-modify-playback-state']);
 
       const width = 450, height = 730, left = screen.width / 2 - width / 2, top = screen.height / 2 - height / 2;
 
@@ -131,6 +134,52 @@ class SpotifyPlayer {
     });
   }
 
+  authorize() {
+    return new Promise((resolve, reject) => {
+      const getAuthorizeURL = scopes => {
+        return `${this.exchangeHost}/authorize?scope=${encodeURIComponent(scopes.join(' '))}`;
+      };
+
+      const url = getLoginURL(['user-read-playback-state', 'user-modify-playback-state']);
+
+      const width = 450, height = 730, left = screen.width / 2 - width / 2, top = screen.height / 2 - height / 2;
+
+      window.addEventListener(
+        'message',
+        event => {
+          const hash = JSON.parse(event.data);
+          if (hash.type == 'access_token') {
+            this.accessToken = hash.access_token;
+            this.expiresIn = hash.expires_in;
+            this._onNewAccessToken();
+            if (this.accessToken === '') {
+              reject();
+            } else {
+              const refreshToken = hash.refresh_token;
+              localStorage.setItem('refreshToken', refreshToken);
+              resolve(hash.access_token);
+            }
+          }
+        },
+        false
+      );
+
+      const w = window.open(
+        url,
+        'Spotify',
+        'menubar=no,location=no,resizable=no,scrollbars=no,status=no, width=' +
+          width +
+          ', height=' +
+          height +
+          ', top=' +
+          top +
+          ', left=' +
+          left
+      );
+    });
+  }
+
+
   fetchGeneric(url) {
     return fetch(url, {
       headers: { Authorization: 'Bearer ' + this.accessToken }
@@ -153,11 +202,14 @@ class SpotifyPlayer {
             this.expiresIn = json['expires_in'];
             return this.fetchPlayer();
           });
+      } else if (response.status === 204) {
+        throw 'no device is active?';
       } else if (response.status >= 500) {
         // assume an error on Spotify's site
         console.error('Got error when fetching player', response);
         return null;
       } else {
+        //console.log("response ", response);
         return response.json();
       }
     });
@@ -165,5 +217,43 @@ class SpotifyPlayer {
 
   fetchUser() {
     return this.fetchGeneric('https://api.spotify.com/v1/me').then(data => data.json());
+  }
+
+  fetchAdvanced(url, method, body={}) {
+    return fetch(url, {
+      method: method,
+      headers: { Authorization: 'Bearer ' + this.accessToken },
+      body: JSON.stringify(body)
+    });
+  }
+  startPlayList(playListUri) {
+    this.fetchAdvanced('https://api.spotify.com/v1/me/player/play', 'PUT', {context_uri: playListUri});
+  }
+  play() {
+    this.fetchAdvanced('https://api.spotify.com/v1/me/player/play', 'PUT');
+  }
+  pause() {
+    this.fetchAdvanced('https://api.spotify.com/v1/me/player/pause', 'PUT');
+  }
+  previous() {
+    this.fetchAdvanced('https://api.spotify.com/v1/me/player/previous', 'POST');
+  }
+  next() {
+    this.fetchAdvanced('https://api.spotify.com/v1/me/player/next', 'POST');
+  }
+
+  fetchAnalysis(track_api_url) {
+    return this.fetchGeneric(track_api_url).then(response => {
+        return response.json().then(trackObject => {
+          //console.log("trackobject ", trackObject);
+          if (!trackObject.id) return;
+          return this.fetchGeneric('https://api.spotify.com/v1/audio-analysis/' + trackObject.id).then(response => {
+            return response.json().then(analysisObject => {
+              //console.log("analysisObject ", analysisObject);
+              return analysisObject;
+            });
+          });
+        });
+    });
   }
 }

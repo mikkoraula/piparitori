@@ -32,6 +32,10 @@ app.use(bodyParser.json());
 var motorProcess = require('child_process').spawn;
 var child;
 var isMotorRunning = false;
+// for controlling the led lights
+var lightsProcess = require('child_process').spawn;
+var lightsChild;
+var isLightsRunning = false;
 // none, custom, auto, stop
 var runningMode = 'none';
 var currentSpeed = 5;
@@ -72,8 +76,6 @@ function stopMotor() {
         resetData();
     }
 }
-
-
 function runMotor(argumentsList) {
     stopMotor();
     console.log("argumentsList");
@@ -110,7 +112,6 @@ function runMotor(argumentsList) {
         resetData();
     });
 }
-
 function changeCustomSpeed(newSpeed) {
     //if (runningMode == 'custom') {
         console.log("before python conn ");
@@ -128,6 +129,54 @@ function changeCustomSpeed(newSpeed) {
     //}
 }
 
+
+// ------------------------------------------------------------------------
+// LED LIGHTS CONTROL
+
+function stopLights() {
+    require('child_process').execSync('python "scripts/resetLights.py"', ['-i']);    
+    if (lightsChild !== undefined) {
+        //console.log('child ' + `child ${child}`);
+        lightsChild.kill();
+        isLightsRunning = false;
+    }
+}
+function startLights(analysisObject) {
+    stopLights();
+    console.log("analysisObject ", analysisObject);
+
+    var argumentsList = [];
+    lightsChild = motorProcess('python', ['scripts/lightsInterface.py', argumentsList[0], argumentsList[1]]);
+
+    isLightsRunning = true;
+
+    lightsChild.on('error', function (code, signal) {
+        util.log('lights child process error with ' +
+                      `code ${code} and signal ${signal}`);
+    });
+    lightsChild.on('exit', function (code, signal) {
+        util.log('lights child process exited with ' +
+                      `code ${code} and signal ${signal}`);
+    });
+}
+/*
+function changeCustomSpeed(newSpeed) {
+    //if (runningMode == 'custom') {
+        console.log("before python conn ");
+        // kind of hacky
+        if (newSpeed === 100)
+            child.stdin.write('' + newSpeed);
+        else if (newSpeed === 5)
+            child.stdin.write('00' + newSpeed);
+        else 
+            child.stdin.write('0' + newSpeed);
+        //child.stdin.end();
+        console.log("hello world");
+        currentSpeed = newSpeed;
+        console.log("finished");
+    //}
+}
+*/
 // ------------------------------------------------------------------------
 // configure Express to serve index.html and any other static pages stored 
 // in the home directory
@@ -241,6 +290,179 @@ app.get('/refresh/', function(req, res, err) {
     //console.log(dataObject);
     res.send(dataObject); 
 });
+
+app.get('/spotify/', function(req, res, err) {
+    //console.log(dataObject);
+    res.render('spotify.html'); 
+});
+
+app.post('/synchLights/', function(req, res) {
+    // if the herb system is already running, just show the statistic tables and don't reset the motor process
+    console.log("current runnig mode " + runningMode);
+    if (runningMode !== 'auto')
+        if (runningMode === 'custom') {
+            stopMotor();
+            res.redirect('/');
+            return;
+        }
+        else
+            runMotor(['auto', currentSpeed]);
+
+    res.render('automatic.html'); 
+});
+
+
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+// Spotify part
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+var querystring = require('querystring');
+var cookieParser = require('cookie-parser');
+var request = require('request');
+app.use(cookieParser());
+app.use(bodyParser.json());
+
+//var DEV = process.env.DEV ? true : false;
+var stateKey = 'spotify_auth_state';
+
+// THESE SHOULD NOT BE HARDCODED HERE
+var client_id = "bf9e9ced5ed54fbb957ddb88c6d220b1";
+var client_secret = "0be49cd2705c48a8ad44e519212439b9";
+var redirect_uri = "http://localhost:5000/callback";
+
+// views is directory for all template files
+//app.set('views', __dirname + '/views');
+//app.set('view engine', 'ejs');
+
+/**
+ * Generates a random string containing numbers and letters
+ * @param  {number} length The length of the string
+ * @return {string} The generated string
+ */
+var generateRandomString = function(length) {
+  var text = '';
+  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (var i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+};
+/*
+app.all('*', function(req,res,next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS");
+  next();
+});
+*/
+app.get('/login', function(req, res) {
+  var state = generateRandomString(16);
+  res.cookie(stateKey, state);
+  // your application requests authorization
+  //var scope = 'user-read-playback-state';
+  res.redirect('https://accounts.spotify.com/authorize?' +
+    querystring.stringify({
+      response_type: 'code',
+      client_id: client_id,
+      scope: req.query.scope,
+      redirect_uri: redirect_uri,
+      state: state
+    }));
+});
+
+app.get('/callback', function(req, res) {
+
+  // your application requests refresh and access tokens
+  // after checking the state parameter
+
+  var code = req.query.code || null;
+  var state = req.query.state || null;
+  var storedState = req.cookies ? req.cookies[stateKey] : null;
+
+  if (state === null || state !== storedState) {
+    console.log('state mismatch', 'state: ' + state, 'storedState ' + storedState, 'cookies ', req.cookies);
+    res.render('spotifyCallback.html', {
+      access_token: null,
+      expires_in: null
+    });
+  } else {
+    res.clearCookie(stateKey);
+    var authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      form: {
+        code: code,
+        redirect_uri: redirect_uri,
+        grant_type: 'authorization_code'
+      },
+      headers: {
+        'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+      },
+      json: true
+    };
+
+    request.post(authOptions, function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+
+        var access_token = body.access_token,
+            refresh_token = body.refresh_token,
+            expires_in = body.expires_in;
+
+        console.log('everything is fine');
+        res.cookie('refresh_token', refresh_token, {maxAge: 30 * 24 * 3600 * 1000, domain: 'localhost'});
+
+        res.render('spotifyCallback.html', {
+          access_token: access_token,
+          expires_in: expires_in,
+          refresh_token: refresh_token
+        });
+      } else {
+        console.log('wrong token');
+
+        res.render('spotifyCallback.html', {
+          access_token: null,
+          expires_in: null
+        });
+      }
+    });
+  }
+});
+
+app.post('/token', function(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  var refreshToken = req.body ? req.body.refresh_token : null;
+  if (refreshToken) {
+    var authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      form: {
+        refresh_token: refreshToken,
+        grant_type: 'refresh_token'
+      },
+      headers: {
+        'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+      },
+      json: true
+    };
+    request.post(authOptions, function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+
+        var access_token = body.access_token,
+            expires_in = body.expires_in;
+
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify({ access_token: access_token, expires_in: expires_in }));
+      } else {
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify({ access_token: '', expires_in: '' }));
+      }
+    });
+  } else {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ access_token: '', expires_in: '' }));
+  }
+});
+
 
 app.get('/', function(req, res) {
     res.render('index.html')

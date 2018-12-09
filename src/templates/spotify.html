@@ -2,9 +2,141 @@
 {% block title %}Spotify{% endblock %}
 {% block content %}
 
-      <div class="floating-background">
-	Tällä sivulla spotfiy
+	<div class="floating-background">
+		Some info maybe
+	</div>
+
+	<div class="floating-background">
+		<div class="container">
+			<div class="login-container hidden" id="js-login-container">
+				<button class="btn btn--login" id="js-btn-login">Login with Spotify</button>
+			</div>
+      <div class="spotify-playback-buttons">
+        <button onclick="previousTrack()" class="btn" id="js-btn-previous">Previous</button>
+        <button onclick="playPause()" class="btn" id="js-btn-play-pause">PlayPause</button>
+        <button onclick="nextTrack()" class="btn" id="js-btn-next">Next</button>
       </div>
+			<div class="hidden" id="js-main-container"></div>
+		</div>
+
+		<button class="btn btn-danger btn--login" id="js-btn-logout">Logout from Spotify</button>
+	</div>
+
+{% endblock %}
+{% block scripts %}
+	<script type="text/javascript">
+var mainContainer = document.getElementById('js-main-container'),
+	loginContainer = document.getElementById('js-login-container'),
+	loginButton = document.getElementById('js-btn-login'),
+	logoutButton = document.getElementById('js-btn-logout'),
+	playPauseButton = document.getElementById('js-btn-play-pause'),
+	previousButton = document.getElementById('js-btn-previous'),
+	nextButton = document.getElementById('js-btn-next'),
+	background = document.getElementById('js-background'),
+	data = null,
+	isPlaying = false,
+  currentTrack = null;
+
+const playListLink = 'https://open.spotify.com/playlist/4NKsSnlLwvwkh6RRucs5bd';
+const playListUri = 'spotify:user:117447786:playlist:4NKsSnlLwvwkh6RRucs5bd';
+const server = 'http://localhost:5000';
+
+var spotifyPlayer = new SpotifyPlayer({
+  exchangeHost: server
+});
+
+var template = function (data) {
+  return `
+    <div class="main-wrapper">
+      <img class="now-playing__img" src="${data.item.album.images[0].url}">
+      <div class="now-playing__side">
+        <div class="now-playing__name">${data.item.name}</div>
+        <div class="now-playing__artist">${data.item.artists[0].name}</div>
+        <div class="now-playing__status">${msecondsToString(data.progress_ms)} - ${msecondsToString(data.item.duration_ms)}</div>
+      </div>
+    </div>
+    <div class="background" style="background-image:url(${data.item.album.images[0].url})"></div>
+  `;
+};
+
+spotifyPlayer.on('update', response => {
+  data = response;
+  if (data.item && data.item.name !== currentTrack) {
+    trackChanged(data.item, data.progress_ms);
+  }
+  isPlaying = response.is_playing;
+  mainContainer.innerHTML = template(response);
+  playPauseButton.innerHTML = isPlaying ? "Pause" : "Play";
+  currentTrack = data.item ? data.item.name : null;
+});
+
+spotifyPlayer.on('login', user => {
+  if (user === null) {
+    loginContainer.style.display = 'block';
+    mainContainer.style.display = 'none';
+  } else {
+    loginContainer.style.display = 'none';
+    mainContainer.style.display = 'block';
+    console.log("asöklsdhf");
+  }
+});
+
+loginButton.addEventListener('click', () => {
+    spotifyPlayer.login();
+});
+
+logoutButton.addEventListener('click', () => {
+    console.log("please log out");
+    spotifyPlayer.logout();
+});
+
+var msecondsToString = function(millliseconds) {
+  var seconds = millliseconds / 1000;
+  var m = Math.floor(seconds / 60);
+  var s = Math.floor(seconds - m * 60);
+  return m + ':' + s;
+}
+var playPause = function() {
+    if (data.is_playing)
+    	spotifyPlayer.pause();
+    else if(!data.context || !data.context.external_urls || data.context.external_urls.spotify !== playListLink) {
+      spotifyPlayer.startPlayList(playListUri);
+    } 
+    else
+    	spotifyPlayer.play();
+    isPlaying = !isPlaying;
+    playPauseButton.innerHTML = isPlaying ? "Pause" : "Play";
+};
+var previousTrack = function() {
+    spotifyPlayer.previous();
+};
+var nextTrack = function() {
+    spotifyPlayer.next();
+};
+
+var trackChanged = function(newTrack, progress_ms) {
+  // catch the current time stamp and link it to the song progress
+  var timeStamp = Date.now();
+
+  console.log("track changed to ", newTrack.name, ", fetching analysis...");
+  spotifyPlayer.fetchAnalysis(newTrack.href).then(analysisObject => {
+    console.log("response in spotify.html :O ", response);
+    analysisObject.timeStamp = timeStamp;
+    analysisObject.progress_ms = progress_ms;
+    fetch(server + '/synchLights/', {
+      method: 'POST',
+      body: JSON.stringify({
+        analysis_object: analysisObject
+      }),
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    });
+  })
+}
+
+spotifyPlayer.init();
+	</script>
 
 
 {% endblock %}
