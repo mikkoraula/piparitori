@@ -373,6 +373,7 @@ app.all('*', function(req,res,next) {
 app.get('/login', function(req, res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
+  console.log("full url ", req.protocol + '://' + req.get('host') + req.originalUrl);
   // your application requests authorization
   //var scope = 'user-read-playback-state';
   res.redirect('https://accounts.spotify.com/authorize?' +
