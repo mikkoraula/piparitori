@@ -146,7 +146,13 @@ function startLights(analysisObject) {
     console.log("analysisObject ", analysisObject);
 
     var argumentsList = [];
-    lightsChild = motorProcess('python', ['scripts/lightsInterface.py', argumentsList[0], argumentsList[1]]);
+    argumentsList.push("start");
+    argumentsList.push(analysisObject.tempo); // tempo
+    argumentsList.push(analysisObject.sections); // sections
+    argumentsList.push(analysisObject.beats); // beats
+    argumentsList.push(analysisObject.timestamp); // timestamp
+    argumentsList.push(analysisObject.progress_ms); // progress_ms
+    lightsChild = motorProcess('python', ['scripts/lightsInterface.py', argumentsList[0], argumentsList[1], argumentsList[2], argumentsList[3], argumentsList[4], argumentsList[5]]);
 
     isLightsRunning = true;
 
@@ -229,13 +235,14 @@ app.get('/custom/getspeed', function(req, res, err) {
 */
 // custom end
 // ------------------------------------------------------------------------
-/*
+
 app.get('/stop/', function(req, res) {
     //runMotor(['stop', currentSpeed])
-    stopMotor();
-    res.redirect('/');
+    //stopMotor();
+    stopLights();
+    //res.redirect('/');
 });
-*/
+
 app.get('/gallerymenu/', function(req, res) {
     var menuImages = [
         {src: "../images/gallery/finished.jpg", name: "finished", caption: "Kuvia valmistuneesta talosta"},

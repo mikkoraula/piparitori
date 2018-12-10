@@ -1,5 +1,5 @@
 # uncomment these
-#from lightsManager import *
+from lightsManager import *
 #from motorManagerDummy import *
 
 import time
