@@ -8,7 +8,7 @@ import select
 import json
 
 # TODO: check is the synching with timestamp & progress_ms required 
-def startLights(tempo, sections, beats, timestamp, progress_ms):
+def startLights(tempo, sections, beats, timestamp, progress_ms, lightsOn):
     #print "asdasd"
     currentBeatIndex = 0
 
@@ -19,7 +19,11 @@ def startLights(tempo, sections, beats, timestamp, progress_ms):
     
     for b in range(len(beats)):
         if beats[b].start >= progress_ms:
-            switchLights()
+            if lightsOn:
+                turnLightsOn()
+            else:
+                resetLights
+            lightsOn = !lightsOn
             time.sleep(beats[b].duration)
 
             # if is the starting beat
@@ -39,13 +43,14 @@ sections = sys.argv[3]
 beats = sys.argv[4]
 timestamp = sys.argv[5] # the song was at progress_ms at this timestamp
 progress_ms = sys.argv[6]
+lightsOn = sys.argv[7]
 
 
 # run the program
 if functionType == 'start':
     # when the custom run stops, it will return the current speed as parameter for stopMotor
     #customSpeed = int(sys.argv[2])
-    stopLights(startLights(tempo, sections, beats, timestamp, progress_ms))
+    startLights(tempo, sections, beats, timestamp, progress_ms)
 elif functionType == 'stop':
     stopLights()
 

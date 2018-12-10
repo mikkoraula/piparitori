@@ -31,16 +31,7 @@ def resetLights():
 
 
 
-def switchLights():
-    if lightsOn:
-        pixels.clear()
-        lightsOn = False;
-    else:
-        for i in range(pixels.count()):
-            # tricky math! we use each pixel as a fraction of the full 96-color wheel
-            # (thats the i / strip.numPixels() part)
-            # Then add in j which makes the colors go around per pixel
-            # the % 96 is to make the wheel cycle around
-            pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(100, 100, 100))
-        pixels.show()
-        lightsOn = True
+def turnLightsOn():
+    for i in range(pixels.count()):
+        pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(100, 100, 100))
+    pixels.show()
