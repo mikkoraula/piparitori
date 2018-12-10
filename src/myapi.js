@@ -20,6 +20,7 @@ var nunjucks  = require('nunjucks');
 var fs        = require('fs');
 var bodyParser= require('body-parser');
 var img       = require('./load_pictures');
+const config  = require('.config.js');
 
 // for reading POST request data
 var app       = express();
@@ -300,7 +301,12 @@ app.get('/refresh/', function(req, res, err) {
 
 app.get('/spotify/', function(req, res, err) {
     //console.log(dataObject);
-    res.render('spotify.html'); 
+    let options = {
+        'server': global.gConfig.server,
+        'playListLink': global.gConfig.playListLink,
+        'playListUri': global.gConfig.playListUri
+    };
+    res.render('spotify.html', {'options': options}); 
 });
 
 app.post('/synchLights/', function(req, res) {
@@ -334,9 +340,9 @@ app.use(bodyParser.json());
 var stateKey = 'spotify_auth_state';
 
 // THESE SHOULD NOT BE HARDCODED HERE
-var client_id = "bf9e9ced5ed54fbb957ddb88c6d220b1";
-var client_secret = "0be49cd2705c48a8ad44e519212439b9";
-var redirect_uri = "http://localhost:5000/callback";
+const client_id = global.gConfig.client_id;
+const client_secret = global.gConfig.client_secret;
+const redirect_uri = "http://" + global.gConfig.server + ":5000/callback";
 
 // views is directory for all template files
 //app.set('views', __dirname + '/views');
@@ -417,7 +423,7 @@ app.get('/callback', function(req, res) {
             expires_in = body.expires_in;
 
         console.log('everything is fine');
-        res.cookie('refresh_token', refresh_token, {maxAge: 30 * 24 * 3600 * 1000, domain: 'localhost'});
+        res.cookie('refresh_token', refresh_token, {maxAge: 30 * 24 * 3600 * 1000, domain: global.gConfig.server});
 
         res.render('spotifyCallback.html', {
           access_token: access_token,
