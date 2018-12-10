@@ -37,9 +37,9 @@ var mainContainer = document.getElementById('js-main-container'),
 	isPlaying = false,
   currentTrack = null;
 
-const playListLink = options.playListLink;//'https://open.spotify.com/playlist/4NKsSnlLwvwkh6RRucs5bd';
-const playListUri = options.playListUri;//'spotify:user:117447786:playlist:4NKsSnlLwvwkh6RRucs5bd';
-const server = 'http://' + options.server + ':5000';//'http://localhost:5000';
+const playListLink = 'https://open.spotify.com/playlist/4NKsSnlLwvwkh6RRucs5bd';
+const playListUri = 'spotify:user:117447786:playlist:4NKsSnlLwvwkh6RRucs5bd';
+const server = 'http://192.168.1.62:5000';
 
 var spotifyPlayer = new SpotifyPlayer({
   exchangeHost: server

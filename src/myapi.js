@@ -20,7 +20,7 @@ var nunjucks  = require('nunjucks');
 var fs        = require('fs');
 var bodyParser= require('body-parser');
 var img       = require('./load_pictures');
-const config  = require('.config.js');
+const config  = require('./config.js');
 
 // for reading POST request data
 var app       = express();
@@ -301,7 +301,7 @@ app.get('/refresh/', function(req, res, err) {
 
 app.get('/spotify/', function(req, res, err) {
     //console.log(dataObject);
-    let options = {
+    var options = {
         'server': global.gConfig.server,
         'playListLink': global.gConfig.playListLink,
         'playListUri': global.gConfig.playListUri
@@ -342,7 +342,7 @@ var stateKey = 'spotify_auth_state';
 // THESE SHOULD NOT BE HARDCODED HERE
 const client_id = global.gConfig.client_id;
 const client_secret = global.gConfig.client_secret;
-const redirect_uri = "http://" + global.gConfig.server + ":5000/callback";
+const redirect_uri = "http://192.168.1.62:5000/callback";
 
 // views is directory for all template files
 //app.set('views', __dirname + '/views');
