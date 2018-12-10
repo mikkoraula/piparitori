@@ -310,18 +310,12 @@ app.get('/spotify/', function(req, res, err) {
 });
 
 app.post('/synchLights/', function(req, res) {
-    // if the herb system is already running, just show the statistic tables and don't reset the motor process
-    console.log("current runnig mode " + runningMode);
-    if (runningMode !== 'auto')
-        if (runningMode === 'custom') {
-            stopMotor();
-            res.redirect('/');
-            return;
-        }
-        else
-            runMotor(['auto', currentSpeed]);
+    if (isLightsRunning)
+        stopLights();
 
-    res.render('automatic.html'); 
+    var analysisObject = req.body.analysis_object;
+    console.log("analysisObject in server ", analysisObject);
+    startLights(analysisObject);
 });
 
 
@@ -342,7 +336,7 @@ var stateKey = 'spotify_auth_state';
 // THESE SHOULD NOT BE HARDCODED HERE
 const client_id = global.gConfig.client_id;
 const client_secret = global.gConfig.client_secret;
-const redirect_uri = "http://192.168.1.62:5000/callback";
+const redirect_uri = "http://" + global.gConfig.server + ":5000/callback";
 
 // views is directory for all template files
 //app.set('views', __dirname + '/views');
@@ -373,7 +367,6 @@ app.all('*', function(req,res,next) {
 app.get('/login', function(req, res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
-  console.log("full url ", req.protocol + '://' + req.get('host') + req.originalUrl);
   // your application requests authorization
   //var scope = 'user-read-playback-state';
   res.redirect('https://accounts.spotify.com/authorize?' +

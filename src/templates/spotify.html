@@ -120,7 +120,7 @@ var trackChanged = function(newTrack, progress_ms) {
 
   console.log("track changed to ", newTrack.name, ", fetching analysis...");
   spotifyPlayer.fetchAnalysis(newTrack.href).then(analysisObject => {
-    console.log("response in spotify.html :O ", response);
+    console.log("response in spotify.html :O ", analysisObject);
     analysisObject.timeStamp = timeStamp;
     analysisObject.progress_ms = progress_ms;
     fetch(server + '/synchLights/', {
