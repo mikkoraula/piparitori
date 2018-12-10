@@ -145,16 +145,18 @@ function stopLights() {
 }
 function startLights(analysisObject) {
     stopLights();
-    console.log("analysisObject ", analysisObject);
+    //console.log("analysisObject ", analysisObject);
 
     var argumentsList = [];
     argumentsList.push("start");
-    argumentsList.push(analysisObject.tempo); // tempo
+    argumentsList.push(analysisObject.track.tempo); // tempo
     argumentsList.push(analysisObject.sections); // sections
     argumentsList.push(analysisObject.beats); // beats
     argumentsList.push(analysisObject.timestamp); // timestamp
     argumentsList.push(analysisObject.progress_ms); // progress_ms
-    lightsChild = motorProcess('python', ['scripts/lightsInterface.py', argumentsList[0], argumentsList[1], argumentsList[2], argumentsList[3], argumentsList[4], argumentsList[5]]);
+    console.log(argumentsList);
+    //lightsChild = motorProcess('python', ['scripts/lightsInterface.py', argumentsList[0], argumentsList[1], argumentsList[2], argumentsList[3], argumentsList[4], argumentsList[5]]);
+    lightsChild = motorProcess('python', ['scripts/lightsInterface.py', argumentsList[0], argumentsList[1]]);
 
     isLightsRunning = true;
 

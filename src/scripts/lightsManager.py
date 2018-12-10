@@ -21,7 +21,6 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings = False
 
 ControlPin = [7,11,13,15]
-lightsOn = false;
 
 def resetLights():
     for pin in ControlPin:
@@ -34,4 +33,7 @@ def resetLights():
 def turnLightsOn():
     for i in range(pixels.count()):
         pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(100, 100, 100))
+    pixels.show()
+def turnLightsOff():
+    pixels.clear()
     pixels.show()
