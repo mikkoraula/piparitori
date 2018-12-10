@@ -25,9 +25,10 @@ const config  = require('./config.js');
 // for reading POST request data
 var app       = express();
 app.use(bodyParser.urlencoded({
+    limit: '50mb',
     extended: true
 }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 
 // for runnign the motor in a child process
 var motorProcess = require('child_process').spawn;
@@ -314,7 +315,7 @@ app.post('/synchLights/', function(req, res) {
         stopLights();
 
     var analysisObject = req.body.analysis_object;
-    console.log("analysisObject in server ", analysisObject);
+    //console.log("analysisObject in server ", analysisObject);
     startLights(analysisObject);
 });
 
