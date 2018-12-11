@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import time
 import sys
 import json
+import random
  
 # Import the WS2801 module.
 import Adafruit_WS2801
@@ -31,8 +32,12 @@ def resetLights():
 
 
 def turnLightsOn():
-    for i in range(pixels.count()):
-        pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(100, 100, 100))
+    for i in range(5):
+        if random.randint(0,1) == 1:
+            pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(100, 100, 100))
+            pixels.set_pixel(10 - i , Adafruit_WS2801.RGB_to_color(100, 100, 100))
+    #for i in range(10):
+        #pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(100, 100, 100))
     pixels.show()
 def turnLightsOff():
     pixels.clear()

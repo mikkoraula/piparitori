@@ -122,10 +122,12 @@ var trackChanged = function(newTrack, progress_ms) {
   spotifyPlayer.fetchAnalysis(newTrack.href).then(analysisObject => {
     console.log("response in spotify.html :O ", analysisObject);
     var i = 0;
-    while (analysis.beats[i].start < progress_ms) {
+
+    while (analysisObject.beats[i].start < progress_ms / 1000) {
+      //console.log(i, " start, ", analysisObject.beats[i]);
       i++;
     }
-    var diff = analysis.beats[i].start - progress_ms;
+    var diff = analysisObject.beats[i].start * 1000 - progress_ms;
 
     // timestamp when analysis started
     analysisObject.analysis_time_stamp = timeStamp;

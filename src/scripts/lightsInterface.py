@@ -40,22 +40,25 @@ def tempoLights(tempo, timestamp, progress_ms, next_beat_ms):
     currentTime = int(round(time.time() * 1000))
     delay = currentTime - timestamp
 
-    beatStart = progress_ms
-    while beatStart < progress_ms + delay:
-        beatStart = beatStart * tempo
-    timeToWait = beatStart - (progress_ms + delay)
-    print "delay was : " + str(delay) + ", going to sleep for " + str(timeToWait)
-    time.sleep(timeToWait)
+    #beatStart = progress_ms
+    sleepTime = 0
+    #print "beatstart " + str(beatStart) + " < " + str(progress_ms + delay)
+    while sleepTime < delay:
+        sleepTime += 60000 / tempo
+    sleepTime = (sleepTime - delay) / 1000
+    print "delay was : " + str(delay) + ", going to sleep for " + str(sleepTime)
+    time.sleep(sleepTime)
 
     for b in range(100):
-        if not lightsOn:
-            print "turned lights on"
-            turnLightsOn()
-        else:
-            print "turned lights off"
-            turnLightsOff()
-        lightsOn = not lightsOn
-        time.sleep(60 / tempo)
+        #if not lightsOn:
+        print "turned lights on"
+        turnLightsOn()
+        time.sleep(60 / tempo / 2 - tempo / 10000)
+        #else:
+        print "turned lights off"
+        turnLightsOff()
+        #lightsOn = not lightsOn
+        time.sleep(60 / tempo / 2)
 
 def stopLights():
     resetLights()
