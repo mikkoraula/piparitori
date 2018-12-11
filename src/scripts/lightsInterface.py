@@ -13,6 +13,8 @@ def startLights(tempo, sections, beats, timestamp, progress_ms):
     currentBeatIndex = 0
     lightsOn = False
 
+    # timestamp is the time at which progress_ms happened
+
     # find the active section
     #for s in range(len(sections)):
     #    if sections[s].start >= progress_ms && sections[s].start + duration < progress_ms:
@@ -31,9 +33,19 @@ def startLights(tempo, sections, beats, timestamp, progress_ms):
             #if sections[b].start + sections[b].duration < progress_ms:
                 #currentBeatIndex = b
 
-def tempoLights(tempo):
+def tempoLights(tempo, timestamp, progress_ms, next_beat_ms):
     print tempo
     lightsOn = False
+
+    currentTime = int(round(time.time() * 1000))
+    delay = currentTime - timestamp
+
+    beatStart = progress_ms
+    while beatStart < progress_ms + delay:
+        beatStart = beatStart * tempo
+    timeToWait = beatStart - (progress_ms + delay)
+    print "delay was : " + str(delay) + ", going to sleep for " + str(timeToWait)
+    time.sleep(timeToWait)
 
     for b in range(100):
         if not lightsOn:
@@ -53,11 +65,12 @@ def stopLights():
 #   [0] function type: 'auto', 'custom', 'stop'
 #   [1] speed
 functionType = sys.argv[1]
-tempo = sys.argv[2]
+tempo = float(sys.argv[2])
 #sections = sys.argv[3]
 #beats = map(str, sys.argv[4].strip('[]').split(','))
-#timestamp = sys.argv[5] # the song was at progress_ms at this timestamp
-#progress_ms = sys.argv[6]
+timestamp = float(sys.argv[3]) # the song was at progress_ms at this timestamp
+progress_ms = float(sys.argv[4])
+next_beat_ms = float(sys.argv[5])
 
 
 # run the program
@@ -67,7 +80,7 @@ if functionType == 'start':
     print "start"
     #print beats
     #startLights(tempo, sections, beats, timestamp, progress_ms)
-    tempoLights(float(tempo))
+    tempoLights(tempo, timestamp, progress_ms, next_beat_ms)
 elif functionType == 'stop':
     stopLights()
 

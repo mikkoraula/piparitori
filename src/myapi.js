@@ -150,13 +150,13 @@ function startLights(analysisObject) {
     var argumentsList = [];
     argumentsList.push("start");
     argumentsList.push(analysisObject.track.tempo); // tempo
-    argumentsList.push(analysisObject.sections); // sections
-    argumentsList.push(analysisObject.beats); // beats
-    argumentsList.push(analysisObject.timestamp); // timestamp
-    argumentsList.push(analysisObject.progress_ms); // progress_ms
+    //argumentsList.push(analysisObject.sections); // sections
+    //argumentsList.push(analysisObject.beats); // beats
+    argumentsList.push(analysisObject.analysis_time_stamp); // timestamp
+    argumentsList.push(analysisObject.analysis_progress_ms); // progress_ms
+    argumentsList.push(analysisObject.analysis_next_beat_ms); // progress_ms
     console.log(argumentsList);
-    //lightsChild = motorProcess('python', ['scripts/lightsInterface.py', argumentsList[0], argumentsList[1], argumentsList[2], argumentsList[3], argumentsList[4], argumentsList[5]]);
-    lightsChild = motorProcess('python', ['scripts/lightsInterface.py', argumentsList[0], argumentsList[1]]);
+    lightsChild = motorProcess('python', ['scripts/lightsInterface.py', argumentsList[0], argumentsList[1], argumentsList[2], argumentsList[3], argumentsList[4]]);
 
     isLightsRunning = true;
 

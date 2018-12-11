@@ -116,13 +116,23 @@ var nextTrack = function() {
 
 var trackChanged = function(newTrack, progress_ms) {
   // catch the current time stamp and link it to the song progress
-  var timeStamp = Date.now();
+  var timeStamp = new Date().getTime();
 
   console.log("track changed to ", newTrack.name, ", fetching analysis...");
   spotifyPlayer.fetchAnalysis(newTrack.href).then(analysisObject => {
     console.log("response in spotify.html :O ", analysisObject);
-    analysisObject.timeStamp = timeStamp;
-    analysisObject.progress_ms = progress_ms;
+    var i = 0;
+    while (analysis.beats[i].start < progress_ms) {
+      i++;
+    }
+    var diff = analysis.beats[i].start - progress_ms;
+
+    // timestamp when analysis started
+    analysisObject.analysis_time_stamp = timeStamp;
+    // progress in milliseconds when analysis was started
+    analysisObject.analysis_progress_ms = progress_ms;
+    // milliseconds till next beat since the analysis was started
+    analysisObject.analysis_next_beat_ms = diff;
     fetch(server + '/synchLights/', {
       method: 'POST',
       body: JSON.stringify({
