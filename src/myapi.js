@@ -136,12 +136,12 @@ function changeCustomSpeed(newSpeed) {
 // LED LIGHTS CONTROL
 
 function stopLights() {
-    require('child_process').execSync('python "scripts/resetLights.py"', ['-i']);    
-    if (lightsChild !== undefined) {
-        //console.log('child ' + `child ${child}`);
+    if (lightsChild) {
+        console.log('child ' + `child ${child}`);
         lightsChild.kill();
         isLightsRunning = false;
     }
+    require('child_process').execSync('python "scripts/resetLights.py"', ['-i']);    
 }
 function startLights(analysisObject, doTransition) {
     stopLights();

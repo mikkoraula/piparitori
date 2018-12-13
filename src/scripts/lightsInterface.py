@@ -2,36 +2,12 @@
 from lightsManager import *
 #from motorManagerDummy import *
 
+import random
 import time
 import sys
 import select
 import json
 
-# TODO: check is the synching with timestamp & progress_ms required 
-def startLights(tempo, sections, beats, timestamp, progress_ms):
-    print beats
-    currentBeatIndex = 0
-    lightsOn = False
-
-    # timestamp is the time at which progress_ms happened
-
-    # find the active section
-    #for s in range(len(sections)):
-    #    if sections[s].start >= progress_ms && sections[s].start + duration < progress_ms:
-    #        currentSection = sections[s]
-    
-    for b in range(len(beats)):
-        if beats[b].start >= progress_ms:
-            if not lightsOn:
-                turnLightsOn()
-            else:
-                resetLights()
-            lightsOn = not lightsOn
-            time.sleep(beats[b].duration)
-
-            # if is the starting beat
-            #if sections[b].start + sections[b].duration < progress_ms:
-                #currentBeatIndex = b
 
 def transitionLights():
     doTransition()
@@ -52,10 +28,13 @@ def tempoLights(tempo, timestamp, progress_ms, next_beat_ms):
     print "delay was : " + str(delay) + ", going to sleep for " + str(sleepTime)
     time.sleep(sleepTime)
 
-    for b in range(100):
+    r = random.randint(1, 100)
+    g = random.randint(1, 100)
+    b = random.randint(1, 100)
+    for i in range(1000):
         #if not lightsOn:
-        print "turned lights on"
-        turnLightsOn()
+        print "turned lights on r" + str(r) + " g" + str(g) + " b" + str(b)
+        turnLightsOn(r, g, b)
         time.sleep(60 / tempo / 2 - tempo / 10000)
         #else:
         print "turned lights off"
@@ -77,7 +56,7 @@ tempo = float(sys.argv[2])
 timestamp = float(sys.argv[3]) # the song was at progress_ms at this timestamp
 progress_ms = float(sys.argv[4])
 next_beat_ms = float(sys.argv[5])
-transition = int(sys.argv[5])
+transition = int(sys.argv[6])
 
 
 # run the program
@@ -87,7 +66,7 @@ if functionType == 'start':
     print "start"
     #print beats
     #startLights(tempo, sections, beats, timestamp, progress_ms)
-    if (transition == 1)
+    if transition == 1:
         transitionLights()
         timestamp += transitionTime
         progress_ms += transitionTime

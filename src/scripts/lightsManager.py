@@ -44,12 +44,12 @@ def doTransition():
         pixels.show()
         time.sleep(transitionTime / stageLightCount)
 
-def turnLightsOn():
+def turnLightsOn(r, g, b):
+    #r = random.randint(0, 100)
+    #g = random.randint(0, 100)
+    #b = random.randint(0, 100)
     for i in range(stageLightCount / 2):
         if random.randint(0,1) == 1:
-            r = random.randint(0, 100)
-            g = random.randint(0, 100)
-            b = random.randint(0, 100)
             pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(r, g, b))
             pixels.set_pixel(stageLightCount - i , Adafruit_WS2801.RGB_to_color(r, g, b))
     #for i in range(10):

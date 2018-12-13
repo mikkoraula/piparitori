@@ -124,9 +124,13 @@ var nextTrack = function() {
 var syncLights = function(progress_ms) {
   var timeStamp = new Date().getTime();
   var sendObject = {};
-  var i = 0;
-  while (analysisObject.beats[i].start < progress_ms / 1000) {
-    i++;
+  var nextBeatIndex = 0;
+  for (var i = 0; i < analysisObject.beats.length; i++) {
+    //console.log("start ", analysisObject.beats[i].start, " < ", progress_ms / 1000);			    
+    if (analysisObject.beats[i].start >= progress_ms / 1000) {
+      nextBeatIndex = i;
+      break;
+    }
   }
   var diff = analysisObject.beats[i].start * 1000 - progress_ms;
   sendObject.tempo = analysisObject.track.tempo;
@@ -155,10 +159,15 @@ var trackChanged = function(newTrack, progress_ms) {
   spotifyPlayer.fetchAnalysis(newTrack.href).then(result => {
     analysisObject = result;
     console.log("response in spotify.html :O ", analysisObject);
-    var i = 0;
-    while (analysisObject.sections[i].start + analysisObject.sections[i].duration < progress_ms / 1000)
-      i++;
-    currentSectionIndex = i;
+    //var i = 0;
+    for (var j = 0; j < analysisObject.sections.length; j++) {
+    //while (analysisObject.sections[i].start + analysisObject.sections[i].duration < progress_ms / 1000)
+      if (analysisObject.sections[j].start >= progress_ms) {
+        currentSectionIndex = j;
+      	break;
+      }
+    }
+    //currentSectionIndex = i;
 
     syncLights(progress_ms);
   });
