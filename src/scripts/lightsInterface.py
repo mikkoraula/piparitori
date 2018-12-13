@@ -33,6 +33,9 @@ def startLights(tempo, sections, beats, timestamp, progress_ms):
             #if sections[b].start + sections[b].duration < progress_ms:
                 #currentBeatIndex = b
 
+def transitionLights():
+    doTransition()
+
 def tempoLights(tempo, timestamp, progress_ms, next_beat_ms):
     print tempo
     lightsOn = False
@@ -74,6 +77,7 @@ tempo = float(sys.argv[2])
 timestamp = float(sys.argv[3]) # the song was at progress_ms at this timestamp
 progress_ms = float(sys.argv[4])
 next_beat_ms = float(sys.argv[5])
+transition = int(sys.argv[5])
 
 
 # run the program
@@ -83,6 +87,15 @@ if functionType == 'start':
     print "start"
     #print beats
     #startLights(tempo, sections, beats, timestamp, progress_ms)
+    if (transition == 1)
+        transitionLights()
+        timestamp += transitionTime
+        progress_ms += transitionTime
+        added = 0
+        while added < transitionTime:
+            next_beat_ms += tempo
+            added += tempo
+
     tempoLights(tempo, timestamp, progress_ms, next_beat_ms)
 elif functionType == 'stop':
     stopLights()

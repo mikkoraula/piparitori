@@ -34,6 +34,8 @@ var mainContainer = document.getElementById('js-main-container'),
 	nextButton = document.getElementById('js-btn-next'),
 	background = document.getElementById('js-background'),
 	data = null,
+  analysisObject = {},
+  currentSectionIndex = 0,
 	isPlaying = false,
   currentTrack = null;
 
@@ -61,8 +63,13 @@ var template = function (data) {
 
 spotifyPlayer.on('update', response => {
   data = response;
+  // track has changed since last update, fetch analysis object
   if (data.item && data.item.name !== currentTrack) {
     trackChanged(data.item, data.progress_ms);
+  } 
+  // track has not changed, but song is about to move to new section
+  else if (analysisObject.sections[currentSectionIndex].start + analysisObject.sections[currentSectionIndex].duration + 1 < data.progress_ms / 1000) {
+    syncLights(data.progress_ms)
   }
   isPlaying = response.is_playing;
   mainContainer.innerHTML = template(response);
@@ -114,37 +121,47 @@ var nextTrack = function() {
     spotifyPlayer.next();
 };
 
+var syncLights = function(progress_ms) {
+  var timeStamp = new Date().getTime();
+  var sendObject = {};
+  var i = 0;
+  while (analysisObject.beats[i].start < progress_ms / 1000) {
+    i++;
+  }
+  var diff = analysisObject.beats[i].start * 1000 - progress_ms;
+  sendObject.tempo = analysisObject.track.tempo;
+  // timestamp when analysis started
+  sendObject.analysis_time_stamp = timeStamp;
+  // progress in milliseconds when analysis was started
+  sendObject.analysis_progress_ms = progress_ms;
+  // milliseconds till next beat since the analysis was started
+  sendObject.analysis_next_beat_ms = diff;
+  fetch(server + '/synchLights/', {
+    method: 'POST',
+    body: JSON.stringify({
+      analysis_object: sendObject
+    }),
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    })
+  });
+}
+
 var trackChanged = function(newTrack, progress_ms) {
   // catch the current time stamp and link it to the song progress
   var timeStamp = new Date().getTime();
-
+  currentSectionIndex = 0;
   console.log("track changed to ", newTrack.name, ", fetching analysis...");
-  spotifyPlayer.fetchAnalysis(newTrack.href).then(analysisObject => {
+  spotifyPlayer.fetchAnalysis(newTrack.href).then(result => {
+    analysisObject = result;
     console.log("response in spotify.html :O ", analysisObject);
     var i = 0;
-
-    while (analysisObject.beats[i].start < progress_ms / 1000) {
-      //console.log(i, " start, ", analysisObject.beats[i]);
+    while (analysisObject.sections[i].start + analysisObject.sections[i].duration < progress_ms / 1000)
       i++;
-    }
-    var diff = analysisObject.beats[i].start * 1000 - progress_ms;
+    currentSectionIndex = i;
 
-    // timestamp when analysis started
-    analysisObject.analysis_time_stamp = timeStamp;
-    // progress in milliseconds when analysis was started
-    analysisObject.analysis_progress_ms = progress_ms;
-    // milliseconds till next beat since the analysis was started
-    analysisObject.analysis_next_beat_ms = diff;
-    fetch(server + '/synchLights/', {
-      method: 'POST',
-      body: JSON.stringify({
-        analysis_object: analysisObject
-      }),
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      })
-    });
-  })
+    syncLights(progress_ms);
+  });
 }
 
 spotifyPlayer.init();

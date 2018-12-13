@@ -143,20 +143,20 @@ function stopLights() {
         isLightsRunning = false;
     }
 }
-function startLights(analysisObject) {
+function startLights(analysisObject, doTransition) {
     stopLights();
     //console.log("analysisObject ", analysisObject);
 
     var argumentsList = [];
     argumentsList.push("start");
-    argumentsList.push(analysisObject.track.tempo); // tempo
+    argumentsList.push(analysisObject.tempo); // tempo
     //argumentsList.push(analysisObject.sections); // sections
     //argumentsList.push(analysisObject.beats); // beats
     argumentsList.push(analysisObject.analysis_time_stamp); // timestamp
     argumentsList.push(analysisObject.analysis_progress_ms); // progress_ms
     argumentsList.push(analysisObject.analysis_next_beat_ms); // progress_ms
     console.log(argumentsList);
-    lightsChild = motorProcess('python', ['scripts/lightsInterface.py', argumentsList[0], argumentsList[1], argumentsList[2], argumentsList[3], argumentsList[4]]);
+    lightsChild = motorProcess('python', ['scripts/lightsInterface.py', argumentsList[0], argumentsList[1], argumentsList[2], argumentsList[3], argumentsList[4], doTransition]);
 
     isLightsRunning = true;
 
@@ -313,12 +313,16 @@ app.get('/spotify/', function(req, res, err) {
 });
 
 app.post('/synchLights/', function(req, res) {
-    if (isLightsRunning)
-        stopLights();
-
     var analysisObject = req.body.analysis_object;
+    var doTransition = 0;
+    if (isLightsRunning) {
+        stopLights();
+        doTransition = 1;
+    }
+
+
     //console.log("analysisObject in server ", analysisObject);
-    startLights(analysisObject);
+    startLights(analysisObject, doTransition);
 });
 
 

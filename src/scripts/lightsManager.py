@@ -23,22 +23,39 @@ GPIO.setwarnings = False
 
 ControlPin = [7,11,13,15]
 
+transitionTime = 1
+stageLightCount = 10
+
 def resetLights():
     for pin in ControlPin:
         GPIO.setup(pin, GPIO.OUT)
         GPIO.output(pin, 0)
     GPIO.cleanup()
 
-
+def doTransition():
+    r = random.randint(0, 100)
+    g = random.randint(0, 100)
+    b = random.randint(0, 100)
+    for i in range(stageLightCount):
+        #for j in range(stageLightCount)
+            #if i == j:
+        pixels.clear()
+        pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(r, g, b))
+        pixels.show()
+        time.sleep(transitionTime / stageLightCount)
 
 def turnLightsOn():
-    for i in range(5):
+    for i in range(stageLightCount / 2):
         if random.randint(0,1) == 1:
-            pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(100, 100, 100))
-            pixels.set_pixel(10 - i , Adafruit_WS2801.RGB_to_color(100, 100, 100))
+            r = random.randint(0, 100)
+            g = random.randint(0, 100)
+            b = random.randint(0, 100)
+            pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(r, g, b))
+            pixels.set_pixel(stageLightCount - i , Adafruit_WS2801.RGB_to_color(r, g, b))
     #for i in range(10):
         #pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(100, 100, 100))
     pixels.show()
+
 def turnLightsOff():
     pixels.clear()
     pixels.show()

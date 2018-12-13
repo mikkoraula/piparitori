@@ -65,7 +65,6 @@ class SpotifyPlayer {
             .catch(e => {
               //this.logout();
               console.log("Player JSON was weird, probably inactive Spotify", e);
-              console.log("ASD");
               clearInterval(this.loopInterval);
 
             });
