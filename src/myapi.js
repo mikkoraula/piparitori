@@ -201,7 +201,7 @@ app.use(express.static(__dirname));
 //app.use(express.static(__dirname/templates));
 //app.use(express.static(__dirname/styles));
 
-app.get('/rng-test/', function(req, res) {
+app.get('/auto/', function(req, res) {
     // if the herb system is already running, just show the statistic tables and don't reset the motor process
     console.log("current runnig mode " + runningMode);
     if (runningMode !== 'auto')
@@ -254,10 +254,11 @@ app.get('/stop/', function(req, res) {
 
 app.get('/gallerymenu/', function(req, res) {
     var menuImages = [
-        {src: "../images/gallery/finished.jpg", name: "finished", caption: "Kuvia valmistuneesta talosta"},
-        {src: "../images/gallery/progress.jpg", name: "progress", caption: "Miten tämä piparkakkutalo syntyi"},
-        {src: "../images/gallery/old.jpg", name: "old", caption: "Viime vuosien piparkakkutaloja"},
-        {src: "../images/gallery/old.jpg", name: "story", caption: "Piparkakkutarina"}
+	    {src: "../images/gallery/progress2018.jpg", name: "progress2018", caption: "Miten joulutori syntyi"},
+        {src: "../images/gallery/finished2017.jpg", name: "finished2017", caption: "Kuvia viime vuoden tuulimyllystä"},
+        //{src: "../images/gallery/progress.jpg", name: "progress", caption: "Miten tämä piparkakkutalo syntyi"},
+        {src: "../images/gallery/2008.jpg", name: "old", caption: "Edellisten vuosien piparkakkutaloja"},
+        {src: "../images/gallery/story.jpg", name: "story", caption: "Piparkakkutarina"}
     ];
 
     res.render('galleryMenu.html', {images: menuImages});

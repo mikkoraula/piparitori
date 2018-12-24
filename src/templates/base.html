@@ -13,7 +13,7 @@
   <!-- this must be after the bootstrap to override things -->
   <link rel="stylesheet" href="/styles/stylesheet.css"/>
 
-  <title>Windmill</title>
+  <title>Joulutori 2018</title>
   {% endblock %}
 </head>
 <body class="vbox viewport">
@@ -37,7 +37,7 @@
           </div>
         </li>
         <li class="nav-item">
-          <div class="nav-button nav-link" onclick="window.location.href='/rng-test/';">
+          <div class="nav-button nav-link" onclick="window.location.href='/auto/';">
             <h1>Auto</h1>
           </div>
         </li>
@@ -51,11 +51,11 @@
             <h1>Stop</h1>
           </div>
         </li>
-        <li class="nav-item">
+        <!--<li class="nav-item">
           <div class="nav-button nav-link" onclick="window.location.href='/spotify/';">
             <h1>Spotify</h1>
           </div>
-        </li>
+        </li>-->
         <li class="nav-item">
           <div class="nav-button nav-link" onclick="window.location.href='/gallerymenu/';">
             <h1>Gallery</h1>
@@ -64,11 +64,21 @@
       </ul>
     </div>
   </nav>
-
+	
+	<video autoplay muted loop id="background-video"><source src="/images/snowflakes.mp4" type="video/mp4"></video>
     <article>
       {% block content %}
       {% endblock %}
     </article>
+	</video>
+	
+	<div id="spotify-container">
+		<div id="now-playing-box"></div>
+		<div class="login-container hidden" id="spotify-login-container">
+			<button class="btn btn--login" id="js-btn-login">Login with Spotify</button>
+			<button class="btn btn-danger btn--login" id="js-btn-logout">Logout from Spotify</button>
+		</div>
+	</div>
 
   <script src="/scripts/nunjucks.min.js"></script>
   <!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>-->
@@ -80,6 +90,7 @@
 
   <script src="/scripts/spotify-player.js"></script>
   <script src="/scripts/jquery.js"></script>
+  <script src="/scripts/now-playing.js"></script>
   {% block scripts %}
   {% endblock %}
 </body>

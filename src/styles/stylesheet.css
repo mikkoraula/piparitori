@@ -32,9 +32,19 @@ body {
       rgba(139, 69, 19, 0.45)
     ),
     /* your image */
-    url("../images/ginger_background.png");
+    /*url("../images/ginger_background.png");*/
 	color: black;
 }
+#background-video {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%; 
+  min-height: 100%;
+  overflow: hidden;
+  z-index: -100;
+}
+
 article {
 	padding: 5vh;
 }
@@ -42,9 +52,11 @@ article {
 .navbar {
 	/*height: var(--navbar-size);*/
 	padding: 0vh 2vh;
-	background-color: antiquewhite;
-	border-bottom: 2px solid saddlebrown;
-    box-shadow: 0px 1px 4px #5a2c04;
+	background-color: #7d8faa;
+	opacity: 0.9;
+	color: white;
+	border-bottom: 2px solid white;
+    box-shadow: 0px 1px 4px white;
 }
 .navbar * {
 	font-weight: bold;
@@ -61,7 +73,7 @@ article {
 	height: 100%;
 }
 .nav-button {
-	background-image: url("../images/ginger_button.png");
+	background-image: url("../images/snowflake_button.png");
 	background-size: 100% 100%;
 	margin: 2vh;
 	height: var(--navbar-button-size);
@@ -113,22 +125,23 @@ table tbody tr:nth-child(2n) {
     background-color: var(--extra-color2);
 }
 table {
-    border: 4px solid saddlebrown;
+    border: 4px solid white;
 }
 .table {
-	background-color: antiquewhite;
+	background-color: #7d8faa;
 	text-align: center;
 	font-size: 2vh;
 	margin-bottom: 3rem;
+	opacity: 0.9;
 }
 th {
-    border: 2px solid saddlebrown;
+    border: 2px solid white;
 }
 td {
-    border: 2px solid saddlebrown;
+    border: 2px solid white;
 }
 .td-static {
-    background-color: antiquewhite;
+    background-color: #7d8faa;
 }
 .td-neutral {
     background-color: #66b3ff;
@@ -233,15 +246,17 @@ td {
 }
 
 .floating-background {
-	background-color: antiquewhite;
+	background-color: #7d8faa;
+	color: white;
+	opacity: 0.9;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	text-align: center;
-	box-shadow: 1px 1px 4px #5a2c04;
+	box-shadow: 1px 1px 4px white;
 	border-width: 2px;
-	border-color: saddlebrown;
+	border-color: white;
 	border-style: solid;
 	padding: 3vh;
 	margin-bottom: 4vh;
@@ -261,13 +276,41 @@ td {
 	/*background-color: antiquewhite;*/
 }
 #customrun-speed {
-	background-color: antiquewhite;
+	background-color: #7d8faa;
 }
 #customrun-minus {
 	/*background-color: antiquewhite;*/
 }
 
 .card {
-    background-color: antiquewhite;
+    background-color: #7d8faa;
     text-align: center;
+}
+
+#spotify-container {
+	width: 20%;
+	height: 10%;
+	background-color: #7d8faa;
+	color: white;
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	border-top-left-radius: 5px;
+	box-shadow: -2px -2px 5px white;
+}
+#now-playing-box {
+	width: 100%;
+	height: 100%;
+	display: flex;
+}
+.now-playing__img {
+	height: 100%;
+	width: auto;
+	border-top-left-radius: 5px;
+	/*float: left;*/
+}
+.now-playing__text {
+	flex-grow: 1;
+	margin: auto;
+	text-align: center;
 }

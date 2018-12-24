@@ -3,31 +3,31 @@
 {% block content %}
 
       <div class="floating-background">
-        Tällä sivulla voit laittaa tuulimyllyn pyörimään :) Valikosta voit siirtyä seuraaviin näkymiin:
+        Tällä sivulla voit laittaa karusellin pyörimään sekä katsella eri vuosien aikaansaannoksia galleriasta!
       </div>
 
-      <div class="floating-background">
+      <div class="floating-background" onclick="window.location.href='/auto/';">
         <h2>Auto</h2>
 
         Moottori pyörii automaattisesti ja vaihtelee nopeuksia satunnaisesti. Tästä näkymästä voi myös tarkkailla miten automaatin arvot vaihtelevat sen ollessa päällä.
       </div>
 
-      <div class="floating-background">
+      <div class="floating-background" onclick="window.location.href='/custom/';">
         <h2>Custom</h2>
 
         Vaihda moottorin pyörimisnopeutta käsin. Näkymässä on + ja - napit, joita painamalla nopeus muuttuu.
       </div>
 
-      <div class="floating-background">
+      <div class="floating-background" onclick="window.location.href='/stop/';">
         <h2>Stop</h2>
 
-        Pysäytä moottori. Tämä pysäyttää moottorin aina, riippumatta siitä, onko se tällä hetkellä automaatissa tai manuaalisessa ajossa.
+        Pysäytä moottori ja valot. Tämä pysäyttää moottorin aina, riippumatta siitä, onko se tällä hetkellä automaatissa tai manuaalisessa ajossa.
       </div>
 
-      <div class="floating-background">
+      <div class="floating-background" onclick="window.location.href='/gallerymenu/';">
         <h2>Gallery</h2>
 
-        Täältä voit tarkastella miten tämä piparkakkutalo syntyi =)
+        Täältä voit tarkastella viime vuosien piparkakkutaloja =)
       </div>
 
 {% endblock %}
