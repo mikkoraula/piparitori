@@ -30,6 +30,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json({limit: '50mb'}));
 
+var useDummys = true;
 // for runnign the motor in a child process
 var motorProcess = require('child_process').spawn;
 var child;
@@ -70,6 +71,10 @@ var testString = 'hello hello hello';
 // motor communication functions
 
 function stopMotor() {
+    if (useDummys) {
+        console.log("stop motor dummy");
+        return;
+    }
     require('child_process').execSync('python "scripts/reset.py"', ['-i']);    
     if (child !== undefined) {
         //console.log('child ' + `child ${child}`);
@@ -79,6 +84,10 @@ function stopMotor() {
     }
 }
 function runMotor(argumentsList) {
+    if (useDummys) {
+        console.log("run motor dummy");
+        return;
+    }
     stopMotor();
     console.log("argumentsList");
     console.log(argumentsList);
@@ -115,6 +124,10 @@ function runMotor(argumentsList) {
     });
 }
 function changeCustomSpeed(newSpeed) {
+    if (useDummys) {
+        console.log("change custom speed motor dummy");
+        return;
+    }
     //if (runningMode == 'custom') {
         console.log("before python conn ");
         // kind of hacky
@@ -136,6 +149,10 @@ function changeCustomSpeed(newSpeed) {
 // LED LIGHTS CONTROL
 
 function stopLights() {
+    if (useDummys) {
+        console.log("stop lights dummy");
+        return;
+    }
     if (lightsChild) {
         console.log('child ' + `child ${child}`);
         lightsChild.kill();
@@ -144,6 +161,10 @@ function stopLights() {
     require('child_process').execSync('python "scripts/resetLights.py"', ['-i']);    
 }
 function startLights(analysisObject, doTransition) {
+    if (useDummys) {
+        console.log("start lights dummy");
+        return;
+    }
     stopLights();
     //console.log("analysisObject ", analysisObject);
 
@@ -170,22 +191,6 @@ function startLights(analysisObject, doTransition) {
     });
 }
 
-function changeCustomSpeed(newSpeed) {
-    //if (runningMode == 'custom') {
-        console.log("before python conn ");
-        // kind of hacky
-        if (newSpeed === 100)
-            child.stdin.write('' + newSpeed);
-        else if (newSpeed === 5)
-            child.stdin.write('00' + newSpeed);
-        else 
-            child.stdin.write('0' + newSpeed);
-        //child.stdin.end();
-        console.log("hello world");
-        currentSpeed = newSpeed;
-        console.log("finished");
-    //}
-}
 
 // ------------------------------------------------------------------------
 // configure Express to serve index.html and any other static pages stored 
