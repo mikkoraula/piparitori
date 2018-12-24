@@ -24,7 +24,10 @@ GPIO.setwarnings = False
 ControlPin = [7,11,13,15]
 
 transitionTime = 1
-stageLightCount = 10
+stageLightStartIndex = 2
+stageLightCount = 22
+archLightStartIndex = 35
+archLightCount = 18
 
 def resetLights():
     for pin in ControlPin:
@@ -32,30 +35,62 @@ def resetLights():
         GPIO.output(pin, 0)
     GPIO.cleanup()
 
-def doTransition():
+def turnStageLightsOff():
+    for i in range(stageLightStartIndex, stageLightStartIndex + stageLightCount):
+        pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(0, 0, 0))
+    pixels.show()
+
+def doStageTransition():
     r = random.randint(0, 100)
     g = random.randint(0, 100)
     b = random.randint(0, 100)
-    for i in range(stageLightCount):
+    for i in range(stageLightStartIndex, stageLightStartIndex + stageLightCount):
         #for j in range(stageLightCount)
             #if i == j:
-        pixels.clear()
+        turnStageLightsOff()
         pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(r, g, b))
         pixels.show()
         time.sleep(transitionTime / stageLightCount)
 
-def turnLightsOn(r, g, b):
-    #r = random.randint(0, 100)
-    #g = random.randint(0, 100)
-    #b = random.randint(0, 100)
-    for i in range(stageLightCount / 2):
+def turnStageLightsOn(r, g, b):
+    for i in range(stageLightStartIndex, stageLightStartIndex + stageLightCount / 2):
         if random.randint(0,1) == 1:
-            pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(r, g, b))
-            pixels.set_pixel(stageLightCount - i , Adafruit_WS2801.RGB_to_color(r, g, b))
-    #for i in range(10):
-        #pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(100, 100, 100))
-    pixels.show()
+            pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(b, g, r))
+            pixels.set_pixel(stageLightCount - i + stageLightStartIndex , Adafruit_WS2801.RGB_to_color(b, g , r))
+        pixels.show()
+
+def turnArchLightsOn(r, g, b):
+    for i in range(archLightStartIndex, archLightStartIndex + archLightCount):
+        pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(b, g, r))
+
+
 
 def turnLightsOff():
     pixels.clear()
     pixels.show()
+
+
+def turnArchLightsOff():
+    for i in range(archLightStartIndex, archLightStartIndex + archLightCount):
+        pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(0, 0, 0))
+    pixels.show()
+
+
+
+#def turnArchOn(r, g, b):
+    #r = random.randint(0, 100)
+    #g = random.randint(0, 100)
+    #b = random.randint(0, 100)
+#    for i in range(stageLightCount):
+        #for j in range(stageLightCount)
+            #if i == j:
+#        pixels.clear()
+#        pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(r, g, b))
+#        pixels.show()
+#        time.sleep(transitionTime / stageLightCount)
+
+#def turnArchOff():
+   # for i in range(archLightStartIndex, archLightCount):
+    
+
+

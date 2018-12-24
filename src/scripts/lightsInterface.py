@@ -10,13 +10,13 @@ import json
 
 
 def transitionLights():
-    doTransition()
+    doStageTransition()
 
 def tempoLights(tempo, timestamp, progress_ms, next_beat_ms):
     print tempo
     lightsOn = False
 
-    currentTime = int(round(time.time() * 1000))
+    currentTime = float(round(time.time() * 1000))
     delay = currentTime - timestamp
 
     #beatStart = progress_ms
@@ -26,21 +26,24 @@ def tempoLights(tempo, timestamp, progress_ms, next_beat_ms):
         sleepTime += 60000 / tempo
     sleepTime = (sleepTime - delay) / 1000
     print "delay was : " + str(delay) + ", going to sleep for " + str(sleepTime)
-    time.sleep(sleepTime)
+    print "tempo sleep disabled"
+    #time.sleep(sleepTime)
 
     r = random.randint(1, 100)
     g = random.randint(1, 100)
     b = random.randint(1, 100)
     for i in range(1000):
         #if not lightsOn:
-        print "turned lights on r" + str(r) + " g" + str(g) + " b" + str(b)
-        turnLightsOn(r, g, b)
+        #turnArchLightsOn(r, g, b)
+        turnStageLightsOn(r, g, b)
         time.sleep(60 / tempo / 2 - tempo / 10000)
         #else:
-        print "turned lights off"
-        turnLightsOff()
+        turnStageLightsOff()
         #lightsOn = not lightsOn
         time.sleep(60 / tempo / 2)
+        #if random.randint(1, 10) == 1:
+        turnArchLightsOff()
+        turnArchLightsOn(r, g, b)
 
 def stopLights():
     resetLights()

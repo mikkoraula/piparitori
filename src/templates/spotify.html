@@ -41,7 +41,7 @@ var mainContainer = document.getElementById('js-main-container'),
 
 const playListLink = 'https://open.spotify.com/playlist/4NKsSnlLwvwkh6RRucs5bd';
 const playListUri = 'spotify:user:117447786:playlist:4NKsSnlLwvwkh6RRucs5bd';
-const server = 'http://192.168.1.62:5000';
+const server = 'http://192.168.43.130:5000';
 
 var spotifyPlayer = new SpotifyPlayer({
   exchangeHost: server
@@ -65,10 +65,12 @@ spotifyPlayer.on('update', response => {
   data = response;
   // track has changed since last update, fetch analysis object
   if (data.item && data.item.name !== currentTrack) {
+    console.log("track changed ");
     trackChanged(data.item, data.progress_ms);
   } 
   // track has not changed, but song is about to move to new section
   else if (analysisObject.sections[currentSectionIndex].start + analysisObject.sections[currentSectionIndex].duration + 1 < data.progress_ms / 1000) {
+    console.log("sync lights");
     syncLights(data.progress_ms)
   }
   isPlaying = response.is_playing;
@@ -84,7 +86,6 @@ spotifyPlayer.on('login', user => {
   } else {
     loginContainer.style.display = 'none';
     mainContainer.style.display = 'block';
-    console.log("asöklsdhf");
   }
 });
 
@@ -93,7 +94,6 @@ loginButton.addEventListener('click', () => {
 });
 
 logoutButton.addEventListener('click', () => {
-    console.log("please log out");
     spotifyPlayer.logout();
 });
 
@@ -127,6 +127,7 @@ var syncLights = function(progress_ms) {
   var nextBeatIndex = 0;
   for (var i = 0; i < analysisObject.beats.length; i++) {
     //console.log("start ", analysisObject.beats[i].start, " < ", progress_ms / 1000);			    
+    console.log(i);
     if (analysisObject.beats[i].start >= progress_ms / 1000) {
       nextBeatIndex = i;
       break;

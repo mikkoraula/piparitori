@@ -155,7 +155,7 @@ function startLights(analysisObject, doTransition) {
     argumentsList.push(analysisObject.analysis_time_stamp); // timestamp
     argumentsList.push(analysisObject.analysis_progress_ms); // progress_ms
     argumentsList.push(analysisObject.analysis_next_beat_ms); // progress_ms
-    console.log(argumentsList);
+    console.log("python lightsInterface.py " + argumentsList[0] + " " + argumentsList[1] + " " + argumentsList[2] + " " + argumentsList[3] + " " + argumentsList[4] + " " + doTransition);
     lightsChild = motorProcess('python', ['scripts/lightsInterface.py', argumentsList[0], argumentsList[1], argumentsList[2], argumentsList[3], argumentsList[4], doTransition]);
 
     isLightsRunning = true;
@@ -169,7 +169,7 @@ function startLights(analysisObject, doTransition) {
                       `code ${code} and signal ${signal}`);
     });
 }
-/*
+
 function changeCustomSpeed(newSpeed) {
     //if (runningMode == 'custom') {
         console.log("before python conn ");
@@ -186,7 +186,7 @@ function changeCustomSpeed(newSpeed) {
         console.log("finished");
     //}
 }
-*/
+
 // ------------------------------------------------------------------------
 // configure Express to serve index.html and any other static pages stored 
 // in the home directory
@@ -195,7 +195,7 @@ function changeCustomSpeed(newSpeed) {
 app.use(express.static(__dirname));
 //app.use(express.static(__dirname/templates));
 //app.use(express.static(__dirname/styles));
-/*
+
 app.get('/rng-test/', function(req, res) {
     // if the herb system is already running, just show the statistic tables and don't reset the motor process
     console.log("current runnig mode " + runningMode);
@@ -210,10 +210,10 @@ app.get('/rng-test/', function(req, res) {
 
     res.render('automatic.html'); 
 });
-*/
+
 // ------------------------------------------------------------------------
 // custom
-/*
+
 app.get('/custom/', function(req, res) {
     if (runningMode === 'auto') {
         stopMotor();
@@ -236,15 +236,15 @@ app.get('/custom/change/:newSpeed', function(req, res) {
 app.get('/custom/getspeed', function(req, res, err) {
     res.send(JSON.stringify(currentSpeed)); 
 });
-*/
+
 // custom end
 // ------------------------------------------------------------------------
 
 app.get('/stop/', function(req, res) {
-    //runMotor(['stop', currentSpeed])
-    //stopMotor();
+    runMotor(['stop', currentSpeed])
+    stopMotor();
     stopLights();
-    //res.redirect('/');
+    res.redirect('/');
 });
 
 app.get('/gallerymenu/', function(req, res) {
