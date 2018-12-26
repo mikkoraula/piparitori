@@ -14,7 +14,7 @@ var mainContainer = document.getElementById('now-playing-box'),
 
 const playListLink = 'https://open.spotify.com/playlist/4NKsSnlLwvwkh6RRucs5bd';
 const playListUri = 'spotify:user:117447786:playlist:4NKsSnlLwvwkh6RRucs5bd';
-const server = 'http://localhost:5000';
+const server = 'http://192.168.43.130:5000';
 
 var spotifyPlayer = new SpotifyPlayer({
   exchangeHost: server
@@ -35,6 +35,9 @@ var nowPlayingTemplate = function (data) {
 };
 
 spotifyPlayer.on('update', response => {
+  if (window.location.href.toString().startsWith(server + '/gallery') || window.location.href.toString() === server + '/')
+    return;
+  //console.log(window.location.href.toString());
   data = response;
   // track has changed since last update, fetch analysis object
   if (data.item && data.item.name !== currentTrack) {

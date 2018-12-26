@@ -48,7 +48,7 @@ def doStageTransition():
         #for j in range(stageLightCount)
             #if i == j:
         turnStageLightsOff()
-        pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(r, g, b))
+        pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color(b, g, r))
         pixels.show()
         time.sleep(transitionTime / stageLightCount)
 

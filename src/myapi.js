@@ -30,7 +30,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json({limit: '50mb'}));
 
-var useDummys = true;
+// if need to simulate motor and leds (if motor and leds are not connected to pi)
+var useDummys = false;
 // for runnign the motor in a child process
 var motorProcess = require('child_process').spawn;
 var child;

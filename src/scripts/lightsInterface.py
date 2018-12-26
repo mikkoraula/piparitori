@@ -28,10 +28,13 @@ def tempoLights(tempo, timestamp, progress_ms, next_beat_ms):
     print "delay was : " + str(delay) + ", going to sleep for " + str(sleepTime)
     print "tempo sleep disabled"
     #time.sleep(sleepTime)
-
-    r = random.randint(1, 100)
-    g = random.randint(1, 100)
-    b = random.randint(1, 100)
+    
+    # gbr
+    r = random.randint(1, 50)
+    # actually blue ?
+    g = 0 #random.randint(1, 40)
+    # actually green?
+    b = random.randint(1, 50)
     for i in range(1000):
         #if not lightsOn:
         #turnArchLightsOn(r, g, b)
